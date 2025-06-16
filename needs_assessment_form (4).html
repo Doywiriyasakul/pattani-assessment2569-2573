@@ -1,0 +1,1500 @@
+        // เพิ่มฟังก์ชันสำหรับดูข้อมูลที่บันทึกไว้
+        function viewSavedData() {
+            const savedData = JSON.parse(localStorage.getItem('allAssessments') || '[]');
+            
+            if (savedData.length === 0) {
+                alert('ไม่มีข้อมูลที่บันทึกไว้');
+                return;
+            }
+            
+            // สร้างหน้าต่างใหม่แสดงข้อมูล
+            const newWindow = window.open('', '_blank', 'width=1000,height=600');
+            let html = `
+                <html>
+                <head>
+                    <title>ข้อมูลแบบประเมินที่บันทึกไว้</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; }
+                        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                        th { background-color: #f2f2f2; }
+                        .summary { background: #f8f9ff; padding: 15px; margin: 10px 0; border-radius: 5px; }
+                    </style>
+                </head>
+                <body>
+                    <h1>📊 ข้อมูลแบบประเมินที่บันทึกไว้</h1>
+                    <p>จำนวนรายการทั้งหมด: ${savedData.length}</p>
+            `;
+            
+            // สร้างตารางสรุป
+            html += `
+                <h2>📈 สรุปข้อมูลรวม</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>วันที่</th>
+                            <th>เพศ</th>
+                            <th>อายุ</th>
+                            <th>จำนวนการประเมิน</th>
+                            <th>คะแนนเฉลี่ยปัจจุบัน</th>
+                            <th>คะแนนเฉลี่ยที่คาดหวัง</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            savedData.forEach((data, index) => {
+                const date = new Date(data.timestamp).toLocaleString('th-TH');
+                const gender = data.personalInfo.gender === 'male' ? 'ชาย' : 'หญิง';
+                const assessmentCount = data.needsAssessment.length;
+                
+                let totalCurrent = 0, totalExpected = 0;
+                data.needsAssessment.forEach(item => {
+                    totalCurrent += parseFloat(item.current);
+                    totalExpected += parseFloat(item.expected);<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบประเมินความต้องการจำเป็นในการพัฒนาการศึกษาจังหวัดปัตตานี</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Sarabun', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .progress-container {
+            background: #f8f9ff;
+            padding: 20px 40px;
+            border-bottom: 1px solid #e1e5e9;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #e1e5e9;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-section {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+            border-radius: 10px;
+            border-left: 5px solid #4facfe;
+        }
+
+        .question-group {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 10px;
+            border-left: 4px solid #4facfe;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        input[type="text"], 
+        input[type="email"], 
+        input[type="number"], 
+        select, 
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #e1e5e9;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .radio-item:hover {
+            border-color: #4facfe;
+            background: #f0f8ff;
+        }
+
+        .radio-item input {
+            margin-right: 10px;
+            width: auto;
+        }
+
+        .assessment-table {
+            margin-top: 30px;
+        }
+
+        .assessment-section {
+            margin-bottom: 40px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 15px 20px;
+            font-weight: 600;
+            font-size: 1.2em;
+            text-align: center;
+        }
+
+        .question-row {
+            display: grid;
+            grid-template-columns: 1fr 5fr 2fr 2fr;
+            gap: 15px;
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            align-items: center;
+            min-height: 60px;
+        }
+
+        .question-row:hover {
+            background: #f8f9ff;
+        }
+
+        .question-number {
+            font-weight: 600;
+            color: #4facfe;
+            text-align: center;
+        }
+
+        .question-text {
+            font-size: 0.95em;
+            color: #333;
+        }
+
+        .rating-group {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .rating-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .rating-labels {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            font-size: 0.8em;
+            color: #666;
+            text-align: center;
+            margin-bottom: 5px;
+            padding: 0 20px;
+        }
+
+        .rating-radio {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .column-headers {
+            display: grid;
+            grid-template-columns: 1fr 5fr 2fr 2fr;
+            gap: 15px;
+            padding: 15px 20px;
+            background: #f8f9ff;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #e1e5e9;
+        }
+
+        .column-headers div {
+            text-align: center;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 40px;
+            background: #f8f9ff;
+            border-top: 1px solid #e1e5e9;
+        }
+
+        .nav-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results {
+            padding: 30px;
+            background: #f0f8ff;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .results h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            text-align: center;
+        }
+
+        .result-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #4facfe;
+        }
+
+        .result-section h4 {
+            color: #4facfe;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .question-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            .column-headers {
+                display: none;
+            }
+
+            .rating-group {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .form-section {
+                padding: 20px;
+            }
+
+            .navigation {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>แบบประเมินความต้องการจำเป็นในการพัฒนาการศึกษาจังหวัดปัตตานี</h1>
+            <p>เพื่อประกอบการทบทวนแผนพัฒนาการศึกษาจังหวัดปัตตานี พ.ศ.2569-2573</p>
+            <p>กรุณาตอบแบบประเมินให้ครบทั้ง 3 ตอน</p>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">ตอนที่ 1 จาก 3: ข้อมูลส่วนตัว</div>
+        </div>
+
+        <form id="assessmentForm" class="form-section">
+            <!-- ตอนที่ 1: ข้อมูลส่วนตัว -->
+            <div class="section active" id="section1">
+                <div class="section-title">ตอนที่ 1: ข้อมูลเกี่ยวกับสถานภาพและข้อมูลพื้นฐานของผู้ตอบแบบสอบถาม</div>
+                
+                <div class="question-group">
+                    <div class="form-group">
+                        <label>1. เพศ *</label>
+                        <div class="radio-group">
+                            <div class="radio-item">
+                                <input type="radio" id="gender_male" name="gender" value="male" required>
+                                <label for="gender_male">ชาย</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" id="gender_female" name="gender" value="female" required>
+                                <label for="gender_female">หญิง</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>2. อายุ *</label>
+                        <div class="radio-group">
+                            <div class="radio-item">
+                                <input type="radio" id="age_20_30" name="age" value="20-30" required>
+                                <label for="age_20_30">ช่วงอายุ 20-30 ปี</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" id="age_31_40" name="age" value="31-40" required>
+                                <label for="age_31_40">ช่วงอายุ 31-40 ปี</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" id="age_41_50" name="age" value="41-50" required>
+                                <label for="age_41_50">ช่วงอายุ 41-50 ปี</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" id="age_51_60" name="age" value="51-60" required>
+                                <label for="age_51_60">ช่วงอายุ 51-60 ปี</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ตอนที่ 2: แบบประเมินความต้องการ -->
+            <div class="section" id="section2">
+                <div class="section-title">ตอนที่ 2: แบบสอบถามเพื่อประเมินความต้องการจำเป็นในการพัฒนาการศึกษาจังหวัดปัตตานี</div>
+                
+                <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #ffc107;">
+                    <h4 style="color: #856404; margin-bottom: 10px;">คำชี้แจง:</h4>
+                    <p style="color: #856404; margin-bottom: 10px;">ท่านคิดว่าสภาพจริงในปัจจุบันและสภาพที่คาดหวังของประเด็นด้านการศึกษาจังหวัดปัตตานีอยู่ในระดับใด</p>
+                    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; font-size: 0.9em; color: #856404;">
+                        <div style="text-align: center;">1 = น้อยที่สุด</div>
+                        <div style="text-align: center;">2 = น้อย</div>
+                        <div style="text-align: center;">3 = ปานกลาง</div>
+                        <div style="text-align: center;">4 = มาก</div>
+                        <div style="text-align: center;">5 = มากที่สุด</div>
+                    </div>
+                </div>
+
+                <div class="assessment-table">
+                    <!-- ระดับก่อนอนุบาล -->
+                    <div class="assessment-section">
+                        <div class="section-header">ระดับก่อนอนุบาล (0-3 ปี)</div>
+                        <div class="column-headers">
+                            <div>ข้อ</div>
+                            <div>ข้อคำถาม</div>
+                            <div>สภาพจริงปัจจุบัน</div>
+                            <div>สภาพที่คาดหวัง</div>
+                        </div>
+                        <div class="rating-labels" style="grid-column: 3;">
+                            <div>1</div><div>2</div><div>3</div><div>4</div><div>5</div>
+                        </div>
+                        <div class="rating-labels" style="grid-column: 4;">
+                            <div>1</div><div>2</div><div>3</div><div>4</div><div>5</div>
+                        </div>
+                        
+                        <div class="question-row">
+                            <div class="question-number">1</div>
+                            <div class="question-text">เด็กมีพัฒนาการทางร่างกาย อารมณ์ และสติปัญญาเหมาะสมกับวัย</div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q1_current" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q1_current" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q1_current" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q1_current" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q1_current" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q1_expected" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q1_expected" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q1_expected" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q1_expected" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q1_expected" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="question-row">
+                            <div class="question-number">2</div>
+                            <div class="question-text">ผู้ปกครองมีความรู้ความเข้าใจในการส่งเสริมพัฒนาการเด็ก</div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q2_current" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q2_current" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q2_current" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q2_current" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q2_current" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q2_expected" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q2_expected" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q2_expected" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q2_expected" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q2_expected" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="question-row">
+                            <div class="question-number">3</div>
+                            <div class="question-text">ศูนย์พัฒนาเด็กเล็กมีครูและบุคลากรที่มีคุณภาพ</div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q3_current" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q3_current" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q3_current" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q3_current" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q3_current" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q3_expected" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q3_expected" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q3_expected" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q3_expected" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q3_expected" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- จำลองข้อคำถามเพิ่มเติม 7 ข้อ สำหรับระดับก่อนอนุบาล -->
+                        <div class="question-row">
+                            <div class="question-number">4</div>
+                            <div class="question-text">มีอุปกรณ์และของเล่นพัฒนาทักษะที่เหมาะสมกับวัย</div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q4_current" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q4_current" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q4_current" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q4_current" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q4_current" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q4_expected" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q4_expected" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q4_expected" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q4_expected" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q4_expected" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="question-row">
+                            <div class="question-number">5</div>
+                            <div class="question-text">เด็กสามารถปรับตัวเข้ากับการอยู่ร่วมกับผู้อื่นได้</div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q5_current" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q5_current" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q5_current" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q5_current" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q5_current" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q5_expected" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q5_expected" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q5_expected" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q5_expected" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q5_expected" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ระดับปฐมวัย -->
+                    <div class="assessment-section">
+                        <div class="section-header">ระดับปฐมวัย (4-6 ปี)</div>
+                        <div class="column-headers">
+                            <div>ข้อ</div>
+                            <div>ข้อคำถาม</div>
+                            <div>สภาพจริงปัจจุบัน</div>
+                            <div>สภาพที่คาดหวัง</div>
+                        </div>
+                        
+                        <div class="question-row">
+                            <div class="question-number">11</div>
+                            <div class="question-text">เด็กมีทักษะการฟัง พูด อ่าน และเขียนพื้นฐานที่เหมาะสม</div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q11_current" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q11_current" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q11_current" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q11_current" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q11_current" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q11_expected" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q11_expected" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q11_expected" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q11_expected" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q11_expected" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="question-row">
+                            <div class="question-number">12</div>
+                            <div class="question-text">นักเรียนสามารถควบคุมอารมณ์และอยู่ร่วมกับผู้อื่นได้</div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q12_current" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q12_current" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q12_current" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q12_current" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q12_current" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q12_expected" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q12_expected" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q12_expected" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q12_expected" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q12_expected" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ระดับประถมศึกษา -->
+                    <div class="assessment-section">
+                        <div class="section-header">ระดับประถมศึกษา</div>
+                        <div class="column-headers">
+                            <div>ข้อ</div>
+                            <div>ข้อคำถาม</div>
+                            <div>สภาพจริงปัจจุบัน</div>
+                            <div>สภาพที่คาดหวัง</div>
+                        </div>
+                        
+                        <div class="question-row">
+                            <div class="question-number">21</div>
+                            <div class="question-text">นักเรียนมีทักษะการอ่านออกเขียนได้อย่างเหมาะสม</div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q21_current" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q21_current" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q21_current" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q21_current" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q21_current" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q21_expected" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q21_expected" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q21_expected" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q21_expected" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q21_expected" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="question-row">
+                            <div class="question-number">22</div>
+                            <div class="question-text">นักเรียนสามารถคิดวิเคราะห์และแก้ปัญหาเบื้องต้นได้</div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q22_current" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q22_current" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q22_current" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q22_current" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q22_current" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q22_expected" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q22_expected" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q22_expected" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q22_expected" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q22_expected" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ระดับมัธยมศึกษาตอนต้น -->
+                    <div class="assessment-section">
+                        <div class="section-header">ระดับมัธยมศึกษาตอนต้น</div>
+                        <div class="column-headers">
+                            <div>ข้อ</div>
+                            <div>ข้อคำถาม</div>
+                            <div>สภาพจริงปัจจุบัน</div>
+                            <div>สภาพที่คาดหวัง</div>
+                        </div>
+                        
+                        <div class="question-row">
+                            <div class="question-number">31</div>
+                            <div class="question-text">นักเรียนมีแนวทางในการศึกษาต่อหรือประกอบอาชีพ</div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q31_current" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q31_current" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q31_current" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q31_current" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q31_current" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q31_expected" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q31_expected" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q31_expected" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q31_expected" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q31_expected" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="question-row">
+                            <div class="question-number">32</div>
+                            <div class="question-text">นักเรียนสามารถควบคุมอารมณ์และมีปฏิสัมพันธ์ที่ดี</div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q32_current" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q32_current" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q32_current" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q32_current" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q32_current" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q32_expected" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q32_expected" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q32_expected" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q32_expected" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q32_expected" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ระดับมัธยมศึกษาตอนปลาย/ปวช. -->
+                    <div class="assessment-section">
+                        <div class="section-header">ระดับมัธยมศึกษาตอนปลาย/ปวช.</div>
+                        <div class="column-headers">
+                            <div>ข้อ</div>
+                            <div>ข้อคำถาม</div>
+                            <div>สภาพจริงปัจจุบัน</div>
+                            <div>สภาพที่คาดหวัง</div>
+                        </div>
+                        
+                        <div class="question-row">
+                            <div class="question-number">41</div>
+                            <div class="question-text">นักเรียนสามารถวางแผนศึกษาต่อหรือเข้าสู่อาชีพได้อย่างชัดเจน</div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q41_current" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q41_current" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q41_current" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q41_current" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q41_current" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q41_expected" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q41_expected" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q41_expected" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q41_expected" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q41_expected" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="question-row">
+                            <div class="question-number">42</div>
+                            <div class="question-text">โรงเรียนมีการแนะแนวอาชีพและศึกษาต่ออย่างมีระบบ</div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q42_current" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q42_current" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q42_current" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q42_current" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q42_current" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q42_expected" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q42_expected" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q42_expected" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q42_expected" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q42_expected" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ระดับอุดมศึกษา/ปวส -->
+                    <div class="assessment-section">
+                        <div class="section-header">ระดับอุดมศึกษา/ปวส</div>
+                        <div class="column-headers">
+                            <div>ข้อ</div>
+                            <div>ข้อคำถาม</div>
+                            <div>สภาพจริงปัจจุบัน</div>
+                            <div>สภาพที่คาดหวัง</div>
+                        </div>
+                        
+                        <div class="question-row">
+                            <div class="question-number">51</div>
+                            <div class="question-text">นักศึกษามีแนวทางพัฒนาตนเองเพื่อเข้าสู่ตลาดแรงงาน</div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q51_current" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q51_current" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q51_current" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q51_current" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q51_current" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q51_expected" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q51_expected" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q51_expected" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q51_expected" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q51_expected" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="question-row">
+                            <div class="question-number">52</div>
+                            <div class="question-text">สถาบันมีหลักสูตรที่ตอบโจทย์พื้นที่และสังคมท้องถิ่น</div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q52_current" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q52_current" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q52_current" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q52_current" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q52_current" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q52_expected" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q52_expected" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q52_expected" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q52_expected" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q52_expected" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- กลุ่มเปราะบาง/ผู้มีความต้องการพิเศษ -->
+                    <div class="assessment-section">
+                        <div class="section-header">กลุ่มเปราะบาง/ผู้มีความต้องการพิเศษ</div>
+                        <div class="column-headers">
+                            <div>ข้อ</div>
+                            <div>ข้อคำถาม</div>
+                            <div>สภาพจริงปัจจุบัน</div>
+                            <div>สภาพที่คาดหวัง</div>
+                        </div>
+                        
+                        <div class="question-row">
+                            <div class="question-number">61</div>
+                            <div class="question-text">นักเรียนกลุ่มเปราะบางได้รับโอกาสเข้าถึงการศึกษาอย่างเท่าเทียม</div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q61_current" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q61_current" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q61_current" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q61_current" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q61_current" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q61_expected" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q61_expected" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q61_expected" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q61_expected" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q61_expected" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="question-row">
+                            <div class="question-number">62</div>
+                            <div class="question-text">มีสื่อการเรียนรู้และสภาพแวดล้อมที่เหมาะกับผู้มีความต้องการพิเศษ</div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q62_current" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q62_current" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q62_current" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q62_current" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q62_current" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                            <div class="rating-container">
+                                <div class="rating-group">
+                                    <input type="radio" name="q62_expected" value="1" class="rating-radio" required>
+                                    <input type="radio" name="q62_expected" value="2" class="rating-radio" required>
+                                    <input type="radio" name="q62_expected" value="3" class="rating-radio" required>
+                                    <input type="radio" name="q62_expected" value="4" class="rating-radio" required>
+                                    <input type="radio" name="q62_expected" value="5" class="rating-radio" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ตอนที่ 3: ข้อเสนอแนะ -->
+            <div class="section" id="section3">
+                <div class="section-title">ตอนที่ 3: ข้อเสนอแนะเพิ่มเติมเพื่อการพัฒนาการศึกษาของจังหวัดปัตตานี</div>
+                
+                <div class="question-group">
+                    <div class="form-group">
+                        <label for="suggestions">กรุณาให้ข้อเสนอแนะเพิ่มเติม:</label>
+                        <textarea id="suggestions" name="suggestions" rows="8" placeholder="โปรดระบุข้อเสนอแนะ ความคิดเห็น หรือแนวทางในการพัฒนาการศึกษาของจังหวัดปัตตานี..."></textarea>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="navigation">
+            <button type="button" id="prevBtn" class="nav-btn btn-secondary" disabled>ย้อนกลับ</button>
+            <div id="stepIndicator" style="font-weight: 600; color: #666;">ขั้นตอน 1 จาก 3</div>
+            <button type="button" id="nextBtn" class="nav-btn btn-primary">ถัดไป</button>
+        </div>
+
+        <div class="results" id="results">
+            <h3>🎉 ขอบคุณสำหรับการตอบแบบประเมิน!</h3>
+            <div class="result-section">
+                <h4>📋 สรุปข้อมูลที่ได้รับ:</h4>
+                <div id="summaryContent"></div>
+            </div>
+            <div class="result-section">
+                <h4>📊 การวิเคราะห์ความต้องการ:</h4>
+                <div id="analysisContent"></div>
+            </div>
+            <div class="result-section">
+                <h4>💡 ข้อเสนอแนะ:</h4>
+                <div id="suggestionsContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSection = 1;
+        const totalSections = 3;
+        
+        // อัพเดท Progress Bar
+        function updateProgress() {
+            const progress = (currentSection / totalSections) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            const sectionNames = ['ข้อมูลส่วนตัว', 'แบบประเมินความต้องการ', 'ข้อเสนอแนะ'];
+            document.getElementById('progressText').textContent = 
+                `ตอนที่ ${currentSection} จาก ${totalSections}: ${sectionNames[currentSection - 1]}`;
+            document.getElementById('stepIndicator').textContent = 
+                `ขั้นตอน ${currentSection} จาก ${totalSections}`;
+        }
+
+        // แสดง Section ที่ต้องการ
+        function showSection(sectionNumber) {
+            // ซ่อน Section ทั้งหมด
+            for(let i = 1; i <= totalSections; i++) {
+                document.getElementById(`section${i}`).classList.remove('active');
+            }
+            
+            // แสดง Section ปัจจุบัน
+            document.getElementById(`section${sectionNumber}`).classList.add('active');
+            
+            // อัพเดทปุ่ม
+            document.getElementById('prevBtn').disabled = sectionNumber === 1;
+            
+            if(sectionNumber === totalSections) {
+                document.getElementById('nextBtn').textContent = 'ส่งแบบประเมิน';
+                document.getElementById('nextBtn').className = 'nav-btn btn-primary';
+            } else {
+                document.getElementById('nextBtn').textContent = 'ถัดไป';
+                document.getElementById('nextBtn').className = 'nav-btn btn-primary';
+            }
+            
+            updateProgress();
+        }
+
+        // ตรวจสอบการกรอกข้อมูลใน Section
+        function validateSection(sectionNumber) {
+            const section = document.getElementById(`section${sectionNumber}`);
+            const requiredInputs = section.querySelectorAll('input[required], select[required]');
+            
+            for(let input of requiredInputs) {
+                if(input.type === 'radio') {
+                    const radioGroup = section.querySelectorAll(`input[name="${input.name}"]`);
+                    let hasChecked = false;
+                    for(let radio of radioGroup) {
+                        if(radio.checked) {
+                            hasChecked = true;
+                            break;
+                        }
+                    }
+                    if(!hasChecked) {
+                        alert('กรุณาตอบคำถามให้ครบถ้วน');
+                        return false;
+                    }
+                } else if(!input.value.trim()) {
+                    alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+                    input.focus();
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // คำนวณและแสดงผลลัพธ์
+        function calculateResults() {
+            const formData = new FormData(document.getElementById('assessmentForm'));
+            const results = {};
+            
+            // เก็บข้อมูลส่วนตัว
+            results.personalInfo = {
+                gender: formData.get('gender'),
+                age: formData.get('age')
+            };
+            
+            // คำนวณคะแนนความต้องการ
+            results.needsAssessment = [];
+            const sections = [
+                {name: 'ระดับก่อนอนุบาล', range: [1, 10]},
+                {name: 'ระดับปฐมวัย', range: [11, 20]},
+                {name: 'ระดับประถมศึกษา', range: [21, 30]},
+                {name: 'ระดับมัธยมศึกษาตอนต้น', range: [31, 40]},
+                {name: 'ระดับมัธยมศึกษาตอนปลาย/ปวช.', range: [41, 50]},
+                {name: 'ระดับอุดมศึกษา/ปวส', range: [51, 60]},
+                {name: 'กลุ่มเปราะบาง/ผู้มีความต้องการพิเศษ', range: [61, 70]}
+            ];
+            
+            sections.forEach(section => {
+                let currentTotal = 0, expectedTotal = 0, count = 0;
+                
+                for(let i = section.range[0]; i <= section.range[1]; i++) {
+                    const currentVal = formData.get(`q${i}_current`);
+                    const expectedVal = formData.get(`q${i}_expected`);
+                    
+                    if(currentVal && expectedVal) {
+                        currentTotal += parseInt(currentVal);
+                        expectedTotal += parseInt(expectedVal);
+                        count++;
+                    }
+                }
+                
+                if(count > 0) {
+                    const currentAvg = (currentTotal / count).toFixed(2);
+                    const expectedAvg = (expectedTotal / count).toFixed(2);
+                    const gap = (expectedAvg - currentAvg).toFixed(2);
+                    
+                    results.needsAssessment.push({
+                        section: section.name,
+                        current: currentAvg,
+                        expected: expectedAvg,
+                        gap: gap,
+                        priority: gap > 1.5 ? 'สูง' : gap > 1 ? 'ปานกลาง' : 'ต่ำ'
+                    });
+                }
+            });
+            
+            results.suggestions = formData.get('suggestions') || 'ไม่มี';
+            
+            return results;
+        }
+
+        // บันทึกข้อมูลไปยัง Google Sheets (ผ่าน Google Apps Script)
+        async function saveToGoogleSheets(data) {
+            try {
+                // URL ของ Google Apps Script Web App (ต้องสร้างแยก)
+                const scriptUrl = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+                
+                const response = await fetch(scriptUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                console.log('ข้อมูลถูกส่งไปยัง Google Sheets สำเร็จ');
+                return true;
+            } catch (error) {
+                console.error('เกิดข้อผิดพลาดในการส่งข้อมูล:', error);
+                return false;
+            }
+        }
+
+        // บันทึกข้อมูลเป็น CSV
+        function exportToCSV(data) {
+            const csvData = [];
+            
+            // Header
+            csvData.push([
+                'วันที่ส่ง', 'เพศ', 'อายุ', 'ระดับการศึกษา', 
+                'สภาพปัจจุบัน', 'สภาพที่คาดหวัง', 'ช่องว่างความต้องการ', 
+                'ระดับความสำคัญ', 'ข้อเสนอแนะ'
+            ]);
+            
+            // Data rows
+            const timestamp = new Date().toLocaleString('th-TH');
+            const genderText = data.personalInfo.gender === 'male' ? 'ชาย' : 'หญิง';
+            
+            data.needsAssessment.forEach(item => {
+                csvData.push([
+                    timestamp,
+                    genderText,
+                    data.personalInfo.age,
+                    item.section,
+                    item.current,
+                    item.expected,
+                    item.gap,
+                    item.priority,
+                    data.suggestions || 'ไม่มี'
+                ]);
+            });
+            
+            // Convert to CSV string
+            const csvString = csvData.map(row => 
+                row.map(field => `"${field}"`).join(',')
+            ).join('\n');
+            
+            // Download CSV
+            const blob = new Blob(['\ufeff' + csvString], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `assessment_data_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+        }
+
+        // บันทึกข้อมูลเป็น JSON
+        function exportToJSON(data) {
+            const exportData = {
+                timestamp: new Date().toISOString(),
+                ...data
+            };
+            
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `assessment_data_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+        }
+
+        // ส่งข้อมูลผ่าน Email (ใช้ EmailJS)
+        async function sendEmail(data) {
+            try {
+                // ต้องติดตั้ง EmailJS ก่อน (emailjs.com)
+                const templateParams = {
+                    to_email: 'admin@example.com', // เปลี่ยนเป็นอีเมลผู้รับ
+                    from_name: 'ระบบแบบประเมิน',
+                    subject: 'ข้อมูลแบบประเมินความต้องการการศึกษาใหม่',
+                    message: JSON.stringify(data, null, 2)
+                };
+                
+                // ต้องใส่ Service ID, Template ID จาก EmailJS
+                await emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams);
+                console.log('ส่งอีเมลสำเร็จ');
+                return true;
+            } catch (error) {
+                console.error('เกิดข้อผิดพลาดในการส่งอีเมล:', error);
+                return false;
+            }
+        }
+
+        // บันทึกข้อมูลใน Local Database (IndexedDB)
+        function saveToIndexedDB(data) {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open('AssessmentDB', 1);
+                
+                request.onerror = () => reject(request.error);
+                
+                request.onsuccess = () => {
+                    const db = request.result;
+                    const transaction = db.transaction(['assessments'], 'readwrite');
+                    const store = transaction.objectStore('assessments');
+                    
+                    const assessmentData = {
+                        id: Date.now(),
+                        timestamp: new Date().toISOString(),
+                        ...data
+                    };
+                    
+                    store.add(assessmentData);
+                    
+                    transaction.oncomplete = () => {
+                        console.log('บันทึกข้อมูลใน IndexedDB สำเร็จ');
+                        resolve(true);
+                    };
+                    
+                    transaction.onerror = () => reject(transaction.error);
+                };
+                
+                request.onupgradeneeded = (event) => {
+                    const db = event.target.result;
+                    const store = db.createObjectStore('assessments', { keyPath: 'id' });
+                    store.createIndex('timestamp', 'timestamp', { unique: false });
+                };
+            });
+        }
+
+        // แสดงผลลัพธ์
+        async function displayResults(results) {
+            // บันทึกข้อมูลหลายรูปแบบ
+            try {
+                // บันทึกใน IndexedDB
+                await saveToIndexedDB(results);
+                
+                // บันทึกใน Local Storage
+                const allData = JSON.parse(localStorage.getItem('allAssessments') || '[]');
+                allData.push({
+                    timestamp: new Date().toISOString(),
+                    ...results
+                });
+                localStorage.setItem('allAssessments', JSON.stringify(allData));
+                
+                // ส่งไปยัง Google Sheets (ถ้าตั้งค่าแล้ว)
+                await saveToGoogleSheets(results);
+                
+            } catch (error) {
+                console.error('เกิดข้อผิดพลาดในการบันทึกข้อมูล:', error);
+            }
+            
+            // สรุปข้อมูล
+            const genderText = results.personalInfo.gender === 'male' ? 'ชาย' : 'หญิง';
+            document.getElementById('summaryContent').innerHTML = `
+                <p><strong>เพศ:</strong> ${genderText}</p>
+                <p><strong>อายุ:</strong> ${results.personalInfo.age} ปี</p>
+                <p><strong>วันที่ตอบ:</strong> ${new Date().toLocaleString('th-TH')}</p>
+            `;
+            
+            // การวิเคราะห์
+            let analysisHTML = '<div style="margin-top: 15px;">';
+            results.needsAssessment.forEach(item => {
+                const priorityColor = item.priority === 'สูง' ? '#dc3545' : 
+                                    item.priority === 'ปานกลาง' ? '#ffc107' : '#28a745';
+                
+                analysisHTML += `
+                    <div style="margin-bottom: 15px; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                        <strong>${item.section}</strong><br>
+                        สภาพปัจจุบัน: ${item.current}/5 | สภาพที่คาดหวัง: ${item.expected}/5<br>
+                        <span style="color: ${priorityColor}; font-weight: bold;">
+                            ช่องว่างความต้องการ: ${item.gap} (ระดับความสำคัญ: ${item.priority})
+                        </span>
+                    </div>
+                `;
+            });
+            analysisHTML += '</div>';
+            document.getElementById('analysisContent').innerHTML = analysisHTML;
+            
+            // ข้อเสนอแนะ
+            document.getElementById('suggestionsContent').innerHTML = `
+                <p style="background: #f8f9fa; padding: 15px; border-radius: 5px; white-space: pre-line;">${results.suggestions}</p>
+            `;
+            
+            // เพิ่มปุ่มส่งออกข้อมูล
+            const exportSection = document.createElement('div');
+            exportSection.className = 'result-section';
+            exportSection.innerHTML = `
+                <h4>📊 ส่งออกข้อมูล:</h4>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px;">
+                    <button onclick="exportToCSV(${JSON.stringify(results).replace(/"/g, '&quot;')})" 
+                            class="nav-btn btn-secondary">
+                        📄 ดาวน์โหลด CSV
+                    </button>
+                    <button onclick="exportToJSON(${JSON.stringify(results).replace(/"/g, '&quot;')})" 
+                            class="nav-btn btn-secondary">
+                        💾 ดาวน์โหลด JSON
+                    </button>
+                    <button onclick="printResults()" class="nav-btn btn-secondary">
+                        🖨️ พิมพ์ผลลัพธ์
+                    </button>
+                    <button onclick="sendEmail(${JSON.stringify(results).replace(/"/g, '&quot;')})" 
+                            class="nav-btn btn-primary">
+                        📧 ส่งอีเมล
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('results').appendChild(exportSection);
+            
+            // แสดงผลลัพธ์
+            document.querySelector('.form-section').style.display = 'none';
+            document.querySelector('.navigation').style.display = 'none';
+            document.getElementById('results').style.display = 'block';
+            
+            // อัพเดท Progress Bar เป็น 100%
+            document.getElementById('progressFill').style.width = '100%';
+            document.getElementById('progressText').textContent = 'เสร็จสิ้น - ขอบคุณสำหรับการตอบแบบประเมิน';
+            
+            // แสดงข้อความยืนยันการบันทึก
+            showSaveConfirmation();
+        }
+
+        // แสดงข้อความยืนยันการบันทึก
+        function showSaveConfirmation() {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #28a745;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 5px;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                z-index: 1000;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.innerHTML = '✅ ข้อมูลถูกบันทึกเรียบร้อยแล้ว';
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Event Listeners
+        document.getElementById('nextBtn').addEventListener('click', function() {
+            if(currentSection < totalSections) {
+                if(validateSection(currentSection)) {
+                    currentSection++;
+                    showSection(currentSection);
+                }
+            } else {
+                // ส่งแบบประเมิน
+                if(validateSection(currentSection)) {
+                    const results = calculateResults();
+                    displayResults(results);
+                }
+            }
+        });
+
+        document.getElementById('prevBtn').addEventListener('click', function() {
+            if(currentSection > 1) {
+                currentSection--;
+                showSection(currentSection);
+            }
+        });
+
+        // เพิ่ม Event Listener สำหรับ Radio buttons เพื่อเปลี่ยนสีเมื่อเลือก
+        document.addEventListener('change', function(e) {
+            if(e.target.type === 'radio') {
+                // รีเซ็ตสีของ radio group
+                const radioName = e.target.name;
+                const radioGroup = document.querySelectorAll(`input[name="${radioName}"]`);
+                
+                radioGroup.forEach(radio => {
+                    const container = radio.closest('.rating-container') || radio.closest('.radio-item');
+                    if(container) {
+                        container.style.background = '';
+                        container.style.borderColor = '';
+                    }
+                });
+                
+                // เปลี่ยนสีของ radio ที่เลือก
+                const selectedContainer = e.target.closest('.rating-container') || e.target.closest('.radio-item');
+                if(selectedContainer) {
+                    selectedContainer.style.background = '#e3f2fd';
+                    selectedContainer.style.borderColor = '#4facfe';
+                }
+            }
+        });
+
+        // เริ่มต้นแสดง Section แรก
+        showSection(currentSection);
+
+        // ฟังก์ชันสำหรับบันทึกข้อมูลใน Local Storage (ถ้าต้องการ)
+        function saveToLocalStorage() {
+            const formData = new FormData(document.getElementById('assessmentForm'));
+            const data = {};
+            for(let [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+            localStorage.setItem('assessmentData', JSON.stringify(data));
+        }
+
+        // ฟังก์ชันสำหรับโหลดข้อมูลจาก Local Storage
+        function loadFromLocalStorage() {
+            const savedData = localStorage.getItem('assessmentData');
+            if(savedData) {
+                const data = JSON.parse(savedData);
+                Object.keys(data).forEach(key => {
+                    const element = document.querySelector(`[name="${key}"][value="${data[key]}"]`);
+                    if(element) {
+                        element.checked = true;
+                    }
+                });
+            }
+        }
+
+        // บันทึกข้อมูลทุกครั้งที่มีการเปลี่ยนแปลง
+        document.addEventListener('change', saveToLocalStorage);
+        document.addEventListener('input', saveToLocalStorage);
+
+        // โหลดข้อมูลเมื่อหน้าเว็บโหลดเสร็จ
+        window.addEventListener('load', loadFromLocalStorage);
+
+        // ฟังก์ชันสำหรับพิมพ์ผลลัพธ์
+        function printResults() {
+            window.print();
+        }
+
+        // ฟังก์ชันสำหรับส่งออกข้อมูลเป็น JSON
+        function exportData() {
+            const results = calculateResults();
+            const dataStr = JSON.stringify(results, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = 'assessment_results.json';
+            link.click();
+        }
+
+        // เพิ่มปุ่มพิมพ์และส่งออกข้อมูลในผลลัพธ์
+        function addActionButtons() {
+            const results = document.getElementById('results');
+            const actionButtons = document.createElement('div');
+            actionButtons.style.textAlign = 'center';
+            actionButtons.style.marginTop = '20px';
+            actionButtons.innerHTML = `
+                <button onclick="printResults()" class="nav-btn btn-secondary" style="margin-right: 10px;">
+                    📄 พิมพ์ผลลัพธ์
+                </button>
+                <button onclick="exportData()" class="nav-btn btn-primary">
+                    💾 ส่งออกข้อมูล
+                </button>
+            `;
+            results.appendChild(actionButtons);
+        }
+
+        // เรียกใช้ฟังก์ชันเพิ่มปุ่มเมื่อแสดงผลลัพธ์
+        const originalDisplayResults = displayResults;
+        displayResults = function(results) {
+            originalDisplayResults(results);
+            addActionButtons();
+        };
+    </script>
+</body>
+</html>
